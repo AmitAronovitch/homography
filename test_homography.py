@@ -41,6 +41,7 @@ class TestHomography(unittest.TestCase):
 
     def test_projectivity(self):
         h = Homography.translation(3, 4)
+        self.assertAlmostEqual(h.old_projectivity(), 0)
         self.assertAlmostEqual(h.projectivity(), 0)
 
     def test_distance(self):

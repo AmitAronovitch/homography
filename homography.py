@@ -131,7 +131,19 @@ class Homography(object):
     def to_dict(self):
         return {'matrix': self.h.tolist()}
 
-    def projectivity(self):
+    def projectivity(hom, width=1, height=1, corners=None):
+        """
+        Rough approximation of how non-affine is the homography, over image
+        with given size.
+        """
+        if corners is None:
+            corners = np.array([
+                [x, y] for y in [0, height] for x in [0, width]])
+        factors = np.dot(corners, hom.h[2, :2]) + 1
+        f = np.max(factors) / np.min(factors)
+        return f - 1
+
+    def old_projectivity(self):
         """ Rough approximation of how non-affine is the homography. """
         proj = np.max(np.abs(self.h[2, 0:2]))
         scale = np.sqrt(np.abs(np.linalg.det(self.h)))
